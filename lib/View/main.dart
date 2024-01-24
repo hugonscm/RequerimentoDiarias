@@ -197,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () {
                       setState(() {
                         _ordenacaoAscendente = !_ordenacaoAscendente;
-                        // Adicione aqui o código para reordenar a lista com base no criterio
+                        // ordenar asc ou desc
                       });
                     },
                   ),
@@ -205,10 +205,7 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.only(right: 15.0),
                     icon: const Icon(Icons.sort),
                     onSelected: (String newValue) {
-                      // Adicione o código para lidar com a mudança na seleção
-                      // Por exemplo, você pode chamar uma função para reordenar os dados
-                      // com base na opção selecionada.
-                      // Exemplo: reordenarLista(newValue);
+                      //ordenar de acordo com o criterio
                     },
                     itemBuilder: (BuildContext context) =>
                         <PopupMenuEntry<String>>[
