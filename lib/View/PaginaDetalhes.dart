@@ -10,14 +10,17 @@ class PaginaDetalhes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Detalhes'),
-        ),
-        body: Stack(
-          children: [
-            Container(
-              alignment: Alignment.topCenter,
-              child: IntrinsicHeight( //usado para o container pegar a altura dos itens
+      appBar: AppBar(
+        title: const Text('Detalhes'),
+      ),
+      body: Stack(
+        children: [
+          Container(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IntrinsicHeight(
+                //usado para o container pegar a altura dos itens
                 child: Container(
                   decoration: BoxDecoration(
                       color: Colors.grey[300],
@@ -27,37 +30,55 @@ class PaginaDetalhes extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Matrícula: ${dados.matricula}', style: const TextStyle(fontSize: 16)),
-                        Text('Nome: ${dados.nome}', style: const TextStyle(fontSize: 16)),
-                        Text('Cargo: ${dados.cargo}', style: const TextStyle(fontSize: 16)),
-                        Text('Sigla: ${dados.sigla}', style: const TextStyle(fontSize: 16)),
-                        Text('Setor Lotação: ${dados.setorLotacao}', style: const TextStyle(fontSize: 16)),
-                        Text('Início Período: ${dados.inicioPeriodo}', style: const TextStyle(fontSize: 16)),
-                        Text('Fim Período: ${dados.fimPeriodo}', style: const TextStyle(fontSize: 16)),
-                        Text('Quantidade de dias: ${dados.qtdeDias}', style: const TextStyle(fontSize: 16)),
-                        Text('Valor diárias: ${dados.valorDiarias}', style: const TextStyle(fontSize: 16)),
-                        Text('Finalidade (Justificativa): ${dados.finalidade}', style: const TextStyle(fontSize: 16)),
-                        Text('Roteiro: ${dados.roteiro}', style: const TextStyle(fontSize: 16)),
+                        Text('Matrícula: ${dados.matricula}',
+                            style: const TextStyle(fontSize: 16)),
+                        Text('Nome: ${dados.nome}',
+                            style: const TextStyle(fontSize: 16)),
+                        Text('Cargo: ${dados.cargo}',
+                            style: const TextStyle(fontSize: 16)),
+                        Text('Sigla: ${dados.sigla}',
+                            style: const TextStyle(fontSize: 16)),
+                        Text('Setor Lotação: ${dados.setorLotacao}',
+                            style: const TextStyle(fontSize: 16)),
+                        Text('Início Período: ${dados.inicioPeriodo}',
+                            style: const TextStyle(fontSize: 16)),
+                        Text('Fim Período: ${dados.fimPeriodo}',
+                            style: const TextStyle(fontSize: 16)),
+                        Text('Quantidade de dias: ${dados.qtdeDias}',
+                            style: const TextStyle(fontSize: 16)),
+                        Text('Valor diárias: ${dados.valorDiarias}',
+                            style: const TextStyle(fontSize: 16)),
+                        Text('Finalidade (Justificativa): ${dados.finalidade}',
+                            style: const TextStyle(fontSize: 16)),
+                        Text('Roteiro: ${dados.roteiro}',
+                            style: const TextStyle(fontSize: 16)),
                       ],
                     ),
                   ),
                 ),
               ),
             ),
-            Positioned(
-              bottom: 16.0,
-              right: 16.0,
-              child: FloatingActionButton(
-                onPressed: () {
-                  //logica para compartilhar esse card
-                },
-                backgroundColor: Colors.grey,
-                foregroundColor: Colors.white,
-                child: const Icon(Icons.share),
+          ),
+          Positioned(
+            bottom: 13.0,
+            right: 80.0,
+            child: IconButton(
+              icon: const Icon(
+                Icons.favorite_outline,
+                size: 50,
+                color: Colors.red,
               ),
-            )
-          ],
-        )
+              onPressed: () {},
+            ),
+          )
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Colors.grey,
+        foregroundColor: Colors.white,
+        child: const Icon(Icons.share),
+      ),
     );
   }
 }
