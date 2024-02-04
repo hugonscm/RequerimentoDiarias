@@ -4,8 +4,8 @@ class Dados {
   final String cargo;
   final String sigla;
   final String setorLotacao;
-  final String inicioPeriodo;
-  final String fimPeriodo;
+  final DateTime inicioPeriodo;
+  final DateTime fimPeriodo;
   final int qtdeDias;
   final double valorDiarias;
   final String finalidade;

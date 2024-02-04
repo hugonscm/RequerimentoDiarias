@@ -23,7 +23,7 @@ class DatabaseConnection {
     List<Dados> dadosList = [];
 
     try {
-      final results = await connection.query('SELECT * FROM funcionarios');
+      final results = await connection.query('SELECT * FROM funcionarios ORDER BY (fim_periodo) DESC LIMIT 10;');
       for (var row in results) {
         Dados dados = Dados(
           matricula: row[0] as int,
@@ -31,8 +31,8 @@ class DatabaseConnection {
           cargo: row[2] as String,
           sigla: row[3] as String,
           setorLotacao: row[4] as String,
-          inicioPeriodo: row[5] as String,
-          fimPeriodo: row[6] as String,
+          inicioPeriodo: row[5] as DateTime,
+          fimPeriodo: row[6] as DateTime,
           qtdeDias: row[7] as int,
           valorDiarias: row[8] as double,
           finalidade: row[9] as String,
@@ -63,8 +63,8 @@ class DatabaseConnection {
           cargo: row[2] as String,
           sigla: row[3] as String,
           setorLotacao: row[4] as String,
-          inicioPeriodo: row[5] as String,
-          fimPeriodo: row[6] as String,
+          inicioPeriodo: row[5] as DateTime,
+          fimPeriodo: row[6] as DateTime,
           qtdeDias: row[7] as int,
           valorDiarias: row[8] as double,
           finalidade: row[9] as String,
@@ -95,8 +95,8 @@ class DatabaseConnection {
           cargo: row[2] as String,
           sigla: row[3] as String,
           setorLotacao: row[4] as String,
-          inicioPeriodo: row[5] as String,
-          fimPeriodo: row[6] as String,
+          inicioPeriodo: row[5] as DateTime,
+          fimPeriodo: row[6] as DateTime,
           qtdeDias: row[7] as int,
           valorDiarias: row[8] as double,
           finalidade: row[9] as String,

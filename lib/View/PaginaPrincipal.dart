@@ -4,6 +4,8 @@ import '../db/DatabaseConnection.dart';
 import '../model/Dados.dart';
 import '../model/Filtro.dart';
 import 'PaginaDetalhes.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 
 class PaginaPrincipal extends StatefulWidget {
   const PaginaPrincipal({super.key});
@@ -41,6 +43,8 @@ class _HomePageState extends State<PaginaPrincipal> {
         ),
       );
     }
+
+    Fluttertoast.showToast(msg: "Exibindo 10 Requerimentos mais recentes.");
 
     return Scaffold(
       body: Column(
