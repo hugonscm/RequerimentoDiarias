@@ -31,6 +31,7 @@ class _HomePageState extends State<PaginaPrincipal> {
     setState(() {
       listaDeDados = dados ?? [];
     });
+    Fluttertoast.showToast(msg: "Exibindo 10 Requerimentos mais recentes.");
   }
 
   @override
@@ -43,8 +44,6 @@ class _HomePageState extends State<PaginaPrincipal> {
         ),
       );
     }
-
-    Fluttertoast.showToast(msg: "Exibindo 10 Requerimentos mais recentes.");
 
     return Scaffold(
       body: Column(
