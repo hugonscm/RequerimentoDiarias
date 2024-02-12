@@ -24,6 +24,21 @@ class Dados {
     required this.valorDiarias,
     required this.finalidade,
     required this.roteiro,
-
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'matricula': matricula,
+      'nome': nome,
+      'cargo': cargo,
+      'sigla': sigla,
+      'setor_lotacao': setorLotacao,
+      'inicio_periodo': inicioPeriodo.toString(),
+      'fim_periodo': fimPeriodo.toString(),
+      'qtde_dias': qtdeDias,
+      'valor_diarias': valorDiarias,
+      'finalidade': finalidade,
+      'roteiro': roteiro,
+    };
+  }
 }

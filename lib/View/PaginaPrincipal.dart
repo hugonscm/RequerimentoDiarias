@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../db/DatabaseConnection.dart';
 import '../model/Dados.dart';
 import '../model/Filtro.dart';
 import 'PaginaDetalhes.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 
 class PaginaPrincipal extends StatefulWidget {
   const PaginaPrincipal({super.key});
@@ -18,20 +18,22 @@ class _HomePageState extends State<PaginaPrincipal> {
   String _filtroSelecionado = Filtro.matricula;
   final TextEditingController _textFieldController = TextEditingController();
   bool _ordenacaoAscendente = true;
+  bool _readOnly = false; //desativar teclado na seleção da data
   List<Dados>? listaDeDados;
+  String parametroOrdenacao = "matricula";
 
   @override
   void initState() {
     super.initState();
-    _getDados();
+    _getDadosRecentes();
+    Fluttertoast.showToast(msg: "Exibindo 30 Requerimentos mais recentes.");
   }
 
-  Future<void> _getDados() async {
-    List<Dados>? dados = await DatabaseConnection.getDados();
+  Future<void> _getDadosRecentes() async {
+    List<Dados>? dados = await DatabaseConnection.getDados(parametroOrdenacao, _ordenacaoAscendente);
     setState(() {
       listaDeDados = dados ?? [];
     });
-    Fluttertoast.showToast(msg: "Exibindo 10 Requerimentos mais recentes.");
   }
 
   @override
@@ -69,8 +71,23 @@ class _HomePageState extends State<PaginaPrincipal> {
                               contentPadding:
                                   EdgeInsets.symmetric(horizontal: 10.0),
                             ),
-                            onChanged: (value) {
-                              // Lógica de filtro aqui
+                            readOnly: _readOnly,
+                            onTap: () async {
+                              if (_filtroSelecionado == Filtro.data) {
+                                DateTime? pickedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(2020),
+                                    lastDate: DateTime(2025));
+                                if (pickedDate != null) {
+                                  String formattedDate =
+                                      DateFormat('dd/MM/yyyy')
+                                          .format(pickedDate);
+                                  setState(() {
+                                    _textFieldController.text = formattedDate;
+                                  });
+                                }
+                              }
                             },
                           ),
                         ),
@@ -120,22 +137,8 @@ class _HomePageState extends State<PaginaPrincipal> {
                 const SizedBox(height: 15), // Espaçamento entre a Row e o botão
                 Center(
                   child: ElevatedButton(
-                    onPressed: () async {
-                      //isso aqui so funciona pra matricula, faça para o resto agora
-
-                      // Obter o valor da matrícula do TextField
-                      int? matricula = int.tryParse(_textFieldController.text);
-
-                      if (matricula != null) {
-                        // Chamar o método getMatricula com a matrícula como parâmetro
-                        List<Dados>? dadosMatricula =
-                            await DatabaseConnection.getMatricula(matricula);
-
-                        // Atualizar o estado com os dados obtidos
-                        setState(() {
-                          listaDeDados = dadosMatricula;
-                        });
-                      }
+                    onPressed: () {
+                      buscarDados();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey,
@@ -156,8 +159,7 @@ class _HomePageState extends State<PaginaPrincipal> {
           ),
           Container(
               alignment: Alignment.topLeft,
-              padding:
-                  const EdgeInsets.only(left: 15.0, top: 6.0, bottom: 3.0),
+              padding: const EdgeInsets.only(left: 15.0, top: 6.0, bottom: 3.0),
               child: Row(
                 children: [
                   Expanded(
@@ -175,13 +177,15 @@ class _HomePageState extends State<PaginaPrincipal> {
                   IconButton(
                     icon: Icon(
                       _ordenacaoAscendente
-                          ? Icons.arrow_upward
-                          : Icons.arrow_downward,
+                          ? Icons.arrow_downward
+                          : Icons.arrow_upward,
                     ),
                     onPressed: () {
                       setState(() {
                         _ordenacaoAscendente = !_ordenacaoAscendente;
-                        // ordenar asc ou desc
+                        //acho que nao precisa do setState, testa depois
+                        //da pra fazer o mesmo esquema do popmenubutton, usa a funcao buscarDados e passa se quer ordenar asc ou desc
+                        buscarDados();
                       });
                     },
                   ),
@@ -189,12 +193,13 @@ class _HomePageState extends State<PaginaPrincipal> {
                     padding: const EdgeInsets.only(right: 15.0),
                     icon: const Icon(Icons.sort),
                     onSelected: (String newValue) {
-                      //ordenar de acordo com o criterio
+                      parametroOrdenacao = newValue;
+                      buscarDados();
                     },
                     itemBuilder: (BuildContext context) =>
                         <PopupMenuEntry<String>>[
                       const PopupMenuItem<String>(
-                        value: 'Matricula',
+                        value: 'matricula',
                         child: Row(
                           children: [
                             Icon(Icons.format_list_numbered),
@@ -205,7 +210,7 @@ class _HomePageState extends State<PaginaPrincipal> {
                         ),
                       ),
                       const PopupMenuItem<String>(
-                        value: 'Nome',
+                        value: 'nome',
                         child: Row(
                           children: [
                             Icon(Icons.sort_by_alpha),
@@ -216,7 +221,7 @@ class _HomePageState extends State<PaginaPrincipal> {
                         ),
                       ),
                       const PopupMenuItem<String>(
-                        value: 'Cargo',
+                        value: 'cargo',
                         child: Row(
                           children: [
                             Icon(Icons.work),
@@ -238,11 +243,68 @@ class _HomePageState extends State<PaginaPrincipal> {
 
   TextInputType _getKeyboardType() {
     if (_filtroSelecionado == Filtro.matricula) {
+      _readOnly = false;
       return TextInputType.number;
     } else if (_filtroSelecionado == Filtro.data) {
-      return TextInputType.datetime;
+      _readOnly = true;
+      return TextInputType.none;
     } else {
+      _readOnly = false;
       return TextInputType.text;
+    }
+  }
+
+  Future<void> buscarDados() async {
+    if (_textFieldController.text.isEmpty) {
+      _getDadosRecentes();
+    } else {
+      if (_filtroSelecionado == Filtro.matricula) {
+        int? matricula = int.tryParse(_textFieldController.text);
+        if (matricula != null) {
+          List<Dados>? dados = await DatabaseConnection.getMatricula(
+              matricula, parametroOrdenacao, _ordenacaoAscendente);
+          setState(() {
+            listaDeDados = dados;
+          });
+        }
+      } else if (_filtroSelecionado == Filtro.nome) {
+        String nome = _textFieldController.text;
+        if (nome.isNotEmpty) {
+          List<Dados>? dados =
+              await DatabaseConnection.getNome(nome, parametroOrdenacao, _ordenacaoAscendente);
+          setState(() {
+            listaDeDados = dados;
+          });
+        }
+      } else if (_filtroSelecionado == Filtro.cargo) {
+        String cargo = _textFieldController.text;
+        if (cargo.isNotEmpty) {
+          List<Dados>? dados =
+              await DatabaseConnection.getCargo(cargo, parametroOrdenacao, _ordenacaoAscendente);
+          setState(() {
+            listaDeDados = dados;
+          });
+        }
+      } else if (_filtroSelecionado == Filtro.roteiro) {
+        String roteiro = _textFieldController.text;
+        if (roteiro.isNotEmpty) {
+          List<Dados>? dados =
+              await DatabaseConnection.getRoteiro(roteiro, parametroOrdenacao, _ordenacaoAscendente);
+          setState(() {
+            listaDeDados = dados;
+          });
+        }
+      } else {
+        //filtro tipo Data
+        String data = _textFieldController.text;
+        if (data.isNotEmpty) {
+          List<Dados>? dados =
+              await DatabaseConnection.getData(data, parametroOrdenacao, _ordenacaoAscendente);
+          setState(() {
+            listaDeDados = dados;
+          });
+        }
+      }
     }
   }
 }

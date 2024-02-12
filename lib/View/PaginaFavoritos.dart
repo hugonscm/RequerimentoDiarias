@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
+import '../db/DatabaseFavoritos.dart';
 import '../model/Dados.dart';
 import 'PaginaDetalhes.dart';
 
 class PaginaFavoritos extends StatelessWidget {
-  const PaginaFavoritos({super.key});
+  const PaginaFavoritos({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,75 +14,71 @@ class PaginaFavoritos extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Favoritos'),
       ),
-      body: DadosListView(
-        listaDeDados: [
-          Dados(
-            matricula: 4,
-            nome: 'Adalberto',
-            cargo: 'Analista',
-            sigla: 'ASD',
-            setorLotacao: 'RH',
-            inicioPeriodo: DateTime(2023-01-01),
-            fimPeriodo: DateTime(2023-01-05),
-            qtdeDias: 5,
-            valorDiarias: 100.0,
-            finalidade: 'Viagem de trabalho',
-            roteiro: 'Roteiro A',
-          ),
-          Dados(
-            matricula: 6,
-            nome: 'Carlos Santos',
-            cargo: 'Programador',
-            sigla: 'ABC',
-            setorLotacao: 'TI',
-            inicioPeriodo: DateTime(2023-01-01),
-            fimPeriodo: DateTime(2023-01-05),
-            qtdeDias: 5,
-            valorDiarias: 100.0,
-            finalidade: 'Viagem de trabalho',
-            roteiro: 'Roteiro A',
-          ),
-        ],
-      ),
+      body: DadosListView(),
     );
   }
 }
 
-class DadosListView extends StatelessWidget {
-  final List<Dados>? listaDeDados;
+class DadosListView extends StatefulWidget {
+  const DadosListView({super.key});
 
-  const DadosListView({Key? key, required this.listaDeDados}) : super(key: key);
+  @override
+  _DadosListViewState createState() => _DadosListViewState();
+}
+
+class _DadosListViewState extends State<DadosListView> {
+  List<Dados>? listaDeDados;
+
+  @override
+  void initState() {
+    super.initState();
+    _getDados();
+  }
+
+  Future<void> _getDados() async {
+    final dbFavoritos = DBFavoritos.instance;
+    List<Dados> dados = await dbFavoritos.getDados();
+    await dbFavoritos.close();
+    setState(() {
+      listaDeDados = dados;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (listaDeDados == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
     return Expanded(
       child: ListView.builder(
         padding: EdgeInsets.zero,
-        itemCount: listaDeDados?.length ?? 0,
+        itemCount: listaDeDados!.length,
         itemBuilder: (context, index) {
-          var dado = listaDeDados?[index];
+          var dado = listaDeDados![index];
           Color? backgroundColor =
               index % 2 == 0 ? Colors.white : Colors.grey[300];
 
           return Container(
             color: backgroundColor,
             child: ListTile(
-              title: Text(dado!.nome),
+              title: Text(dado.nome),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Matrícula: ${dado.matricula}'),
-                  Text('Inicio: ${dado.inicioPeriodo}, Fim: ${dado.fimPeriodo}')
+                  Text(
+                      'Inicio: ${DateFormat('dd/MM/yyyy').format(dado.inicioPeriodo)}, Fim: ${DateFormat('dd/MM/yyyy').format(dado.fimPeriodo)}')
                 ],
               ),
               onTap: () {
-                // Navegar para a tela de detalhes
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PaginaDetalhes(dados: dado),
-                  ),
-                );
+                      builder: (context) => PaginaDetalhes(dados: dado)),
+                ).then((value) => _getDados());
               },
             ),
           );
