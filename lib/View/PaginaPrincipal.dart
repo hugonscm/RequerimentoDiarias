@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../db/DatabaseConnection.dart';
 import '../model/Dados.dart';
@@ -30,7 +31,8 @@ class _HomePageState extends State<PaginaPrincipal> {
   }
 
   Future<void> _getDadosRecentes() async {
-    List<Dados>? dados = await DatabaseConnection.getDados(parametroOrdenacao, _ordenacaoAscendente);
+    List<Dados>? dados = await DatabaseConnection.getDados(
+        parametroOrdenacao, _ordenacaoAscendente);
     setState(() {
       listaDeDados = dados ?? [];
     });
@@ -141,7 +143,7 @@ class _HomePageState extends State<PaginaPrincipal> {
                       buscarDados();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey,
+                      backgroundColor: Colors.black54,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 60.0, vertical: 10.0),
                     ),
@@ -270,8 +272,8 @@ class _HomePageState extends State<PaginaPrincipal> {
       } else if (_filtroSelecionado == Filtro.nome) {
         String nome = _textFieldController.text;
         if (nome.isNotEmpty) {
-          List<Dados>? dados =
-              await DatabaseConnection.getNome(nome, parametroOrdenacao, _ordenacaoAscendente);
+          List<Dados>? dados = await DatabaseConnection.getNome(
+              nome, parametroOrdenacao, _ordenacaoAscendente);
           setState(() {
             listaDeDados = dados;
           });
@@ -279,8 +281,8 @@ class _HomePageState extends State<PaginaPrincipal> {
       } else if (_filtroSelecionado == Filtro.cargo) {
         String cargo = _textFieldController.text;
         if (cargo.isNotEmpty) {
-          List<Dados>? dados =
-              await DatabaseConnection.getCargo(cargo, parametroOrdenacao, _ordenacaoAscendente);
+          List<Dados>? dados = await DatabaseConnection.getCargo(
+              cargo, parametroOrdenacao, _ordenacaoAscendente);
           setState(() {
             listaDeDados = dados;
           });
@@ -288,8 +290,8 @@ class _HomePageState extends State<PaginaPrincipal> {
       } else if (_filtroSelecionado == Filtro.roteiro) {
         String roteiro = _textFieldController.text;
         if (roteiro.isNotEmpty) {
-          List<Dados>? dados =
-              await DatabaseConnection.getRoteiro(roteiro, parametroOrdenacao, _ordenacaoAscendente);
+          List<Dados>? dados = await DatabaseConnection.getRoteiro(
+              roteiro, parametroOrdenacao, _ordenacaoAscendente);
           setState(() {
             listaDeDados = dados;
           });
@@ -298,8 +300,8 @@ class _HomePageState extends State<PaginaPrincipal> {
         //filtro tipo Data
         String data = _textFieldController.text;
         if (data.isNotEmpty) {
-          List<Dados>? dados =
-              await DatabaseConnection.getData(data, parametroOrdenacao, _ordenacaoAscendente);
+          List<Dados>? dados = await DatabaseConnection.getData(
+              data, parametroOrdenacao, _ordenacaoAscendente);
           setState(() {
             listaDeDados = dados;
           });
@@ -310,7 +312,7 @@ class _HomePageState extends State<PaginaPrincipal> {
 }
 
 class Header extends StatelessWidget {
-  const Header({super.key});
+  const Header({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -326,12 +328,15 @@ class Header extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.only(left: 10.0, right: 10.0),
             color: Colors.white,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Image.asset("lib/assets/header1.JPG", scale: 3.8),
-                Image.asset("lib/assets/header2.JPG", scale: 2)
-              ],
+            child: GestureDetector(
+              onTap: _launchUrl,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset("lib/assets/header1.JPG", scale: 3.8),
+                  Image.asset("lib/assets/header2.JPG", scale: 2)
+                ],
+              ),
             ),
           ),
         ),
@@ -345,6 +350,13 @@ class Header extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Future<void> _launchUrl() async {
+    final Uri url = Uri.parse('https://www.tjsp.jus.br/');
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
   }
 }
 
@@ -362,22 +374,13 @@ class DadosListView extends StatelessWidget {
         itemBuilder: (context, index) {
           var dado = listaDeDados?[index];
           Color? backgroundColor =
-              index % 2 == 0 ? Colors.white : Colors.grey[300];
+              index % 2 == 0 ? Colors.grey[300] : Colors.white;
 
-          return Container(
+          return Card(
             color: backgroundColor,
-            child: ListTile(
-              title: Text(dado!.nome),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Cargo: ${dado.cargo}, Matrícula: ${dado.matricula}'),
-                  Text(
-                      'Roteiro: ${dado.roteiro}, Número de dias: ${dado.qtdeDias}')
-                ],
-              ),
+            child: InkWell(
+              //adicionar a animação de toque
               onTap: () {
-                // Navegar para a tela de detalhes
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -385,6 +388,54 @@ class DadosListView extends StatelessWidget {
                   ),
                 );
               },
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      dado!.nome,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Text('CARGO: ',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                        Text(dado.cargo)
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text('MATRÍCULA: ',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                        Text('${dado.matricula}')
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text('ROTEIRO: ',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                        Text(dado.roteiro),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text('NÚMERO DE DIAS: ',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                        Text('${dado.qtdeDias}'),
+                      ],
+                    )
+                  ],
+                ),
+              ),
             ),
           );
         },

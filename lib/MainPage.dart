@@ -39,7 +39,7 @@ class _MainPage extends State<MainPage> {
         },
         backgroundColor: Colors.white,
         height: 60,
-        indicatorColor: Colors.grey,
+        indicatorColor: Colors.red,
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
