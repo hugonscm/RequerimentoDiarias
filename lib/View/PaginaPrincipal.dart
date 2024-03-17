@@ -79,7 +79,7 @@ class _HomePageState extends State<PaginaPrincipal> {
                                 DateTime? pickedDate = await showDatePicker(
                                     context: context,
                                     initialDate: DateTime.now(),
-                                    firstDate: DateTime(2020),
+                                    firstDate: DateTime(2019),
                                     lastDate: DateTime(2025));
                                 if (pickedDate != null) {
                                   String formattedDate =
@@ -406,7 +406,13 @@ class DadosListView extends StatelessWidget {
                         const Text('CARGO: ',
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold)),
-                        Text(dado.cargo)
+                        Expanded(
+                          child: Text(
+                            dado.cargo,
+                            //quebra de linha automática caso o texto seja muito grande
+                            softWrap: true,
+                          ),
+                        ),
                       ],
                     ),
                     Row(
@@ -422,7 +428,13 @@ class DadosListView extends StatelessWidget {
                         const Text('ROTEIRO: ',
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold)),
-                        Text(dado.roteiro),
+                        Expanded(
+                          child: Text(
+                            dado.roteiro,
+                            //quebra de linha automática caso o texto seja muito grande
+                            softWrap: true,
+                          ),
+                        ),
                       ],
                     ),
                     Row(

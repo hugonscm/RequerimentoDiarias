@@ -7,7 +7,7 @@ class Dados {
   final DateTime inicioPeriodo;
   final DateTime fimPeriodo;
   final int qtdeDias;
-  final double valorDiarias;
+  final String valorDiarias;
   final String finalidade;
   final String roteiro;
 

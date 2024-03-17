@@ -25,7 +25,7 @@ class DatabaseConnection {
 
     try {
       final results = await connection.query(
-          'SELECT * FROM (SELECT * FROM funcionarios ORDER BY fim_periodo DESC LIMIT 30) ORDER BY $parametroOrdenacao $ordem;');
+          'SELECT * FROM (SELECT * FROM bd.diarias ORDER BY fim_periodo DESC LIMIT 30) ORDER BY $parametroOrdenacao $ordem;');
       for (var row in results) {
         Dados dados = Dados(
           matricula: row[0] as int,
@@ -36,7 +36,7 @@ class DatabaseConnection {
           inicioPeriodo: row[5] as DateTime,
           fimPeriodo: row[6] as DateTime,
           qtdeDias: row[7] as int,
-          valorDiarias: row[8] as double,
+          valorDiarias: row[8] as String,
           finalidade: row[9] as String,
           roteiro: row[10] as String,
         );
@@ -58,7 +58,7 @@ class DatabaseConnection {
 
     try {
       final results = await connection.query(
-          ' SELECT * FROM funcionarios WHERE matricula = $matricula  ORDER BY $parametroOrdenacao $ordem');
+          ' SELECT * FROM bd.diarias WHERE matricula = $matricula  ORDER BY $parametroOrdenacao $ordem');
       for (var row in results) {
         Dados dados = Dados(
           matricula: row[0] as int,
@@ -69,7 +69,7 @@ class DatabaseConnection {
           inicioPeriodo: row[5] as DateTime,
           fimPeriodo: row[6] as DateTime,
           qtdeDias: row[7] as int,
-          valorDiarias: row[8] as double,
+          valorDiarias: row[8] as String,
           finalidade: row[9] as String,
           roteiro: row[10] as String,
         );
@@ -91,7 +91,7 @@ class DatabaseConnection {
 
     try {
       final results = await connection.query(
-          ' SELECT * FROM funcionarios WHERE LOWER(nome) LIKE LOWER(\'%$nome%\') ORDER BY $parametroOrdenacao $ordem');
+          ' SELECT * FROM bd.diarias WHERE LOWER(nome) LIKE LOWER(\'%$nome%\') ORDER BY $parametroOrdenacao $ordem');
       for (var row in results) {
         Dados dados = Dados(
           matricula: row[0] as int,
@@ -102,7 +102,7 @@ class DatabaseConnection {
           inicioPeriodo: row[5] as DateTime,
           fimPeriodo: row[6] as DateTime,
           qtdeDias: row[7] as int,
-          valorDiarias: row[8] as double,
+          valorDiarias: row[8] as String,
           finalidade: row[9] as String,
           roteiro: row[10] as String,
         );
@@ -124,7 +124,7 @@ class DatabaseConnection {
 
     try {
       final results = await connection.query(
-          ' SELECT * FROM funcionarios WHERE LOWER(cargo) LIKE LOWER(\'%$cargo%\') ORDER BY $parametroOrdenacao $ordem');
+          ' SELECT * FROM bd.diarias WHERE LOWER(cargo) LIKE LOWER(\'%$cargo%\') ORDER BY $parametroOrdenacao $ordem');
       for (var row in results) {
         Dados dados = Dados(
           matricula: row[0] as int,
@@ -135,7 +135,7 @@ class DatabaseConnection {
           inicioPeriodo: row[5] as DateTime,
           fimPeriodo: row[6] as DateTime,
           qtdeDias: row[7] as int,
-          valorDiarias: row[8] as double,
+          valorDiarias: row[8] as String,
           finalidade: row[9] as String,
           roteiro: row[10] as String,
         );
@@ -157,7 +157,7 @@ class DatabaseConnection {
 
     try {
       final results = await connection.query(
-          ' SELECT * FROM funcionarios WHERE LOWER(roteiro) LIKE LOWER(\'%$roteiro%\') ORDER BY $parametroOrdenacao $ordem');
+          ' SELECT * FROM bd.diarias WHERE LOWER(roteiro) LIKE LOWER(\'%$roteiro%\') ORDER BY $parametroOrdenacao $ordem');
       for (var row in results) {
         Dados dados = Dados(
           matricula: row[0] as int,
@@ -168,7 +168,7 @@ class DatabaseConnection {
           inicioPeriodo: row[5] as DateTime,
           fimPeriodo: row[6] as DateTime,
           qtdeDias: row[7] as int,
-          valorDiarias: row[8] as double,
+          valorDiarias: row[8] as String,
           finalidade: row[9] as String,
           roteiro: row[10] as String,
         );
@@ -190,7 +190,7 @@ class DatabaseConnection {
 
     try {
       final results = await connection.query(
-          ' SELECT * FROM funcionarios WHERE \'$data\' >= inicio_periodo  AND \'$data\' <= fim_periodo ORDER BY $parametroOrdenacao $ordem');
+          ' SELECT * FROM bd.diarias WHERE \'$data\' >= inicio_periodo  AND \'$data\' <= fim_periodo ORDER BY $parametroOrdenacao $ordem');
       for (var row in results) {
         Dados dados = Dados(
           matricula: row[0] as int,
@@ -201,7 +201,7 @@ class DatabaseConnection {
           inicioPeriodo: row[5] as DateTime,
           fimPeriodo: row[6] as DateTime,
           qtdeDias: row[7] as int,
-          valorDiarias: row[8] as double,
+          valorDiarias: row[8] as String,
           finalidade: row[9] as String,
           roteiro: row[10] as String,
         );
