@@ -14,7 +14,7 @@ class PaginaFavoritos extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Favoritos'),
       ),
-      body: DadosListView(),
+      body: const DadosListView(),
     );
   }
 }

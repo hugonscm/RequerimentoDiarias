@@ -12,10 +12,10 @@ class PaginaPrincipal extends StatefulWidget {
   const PaginaPrincipal({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _HomePageState extends State<PaginaPrincipal> {
+class HomePageState extends State<PaginaPrincipal> {
   String _filtroSelecionado = Filtro.matricula;
   final TextEditingController _textFieldController = TextEditingController();
   bool _ordenacaoAscendente = true;
@@ -312,7 +312,7 @@ class _HomePageState extends State<PaginaPrincipal> {
 }
 
 class Header extends StatelessWidget {
-  const Header({Key? key});
+  const Header({super.key});
 
   @override
   Widget build(BuildContext context) {
