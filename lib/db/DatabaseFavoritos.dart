@@ -35,7 +35,7 @@ class DBFavoritos {
     inicio_periodo DATE,
     fim_periodo DATE,
     qtde_dias INTEGER,
-    valor_diarias DOUBLE PRECISION,
+    valor_diarias TEXT,
     finalidade TEXT,
     roteiro TEXT,
 	PRIMARY KEY (matricula, inicio_periodo, fim_periodo)

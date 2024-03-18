@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:Requerimento_de_diarias/db/DatabaseFavoritos.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 import '../model/Dados.dart';
 
 class PaginaDetalhes extends StatefulWidget {
@@ -14,6 +17,7 @@ class PaginaDetalhes extends StatefulWidget {
 }
 
 class _PaginaDetalhesState extends State<PaginaDetalhes> {
+  final ScreenshotController screenshotController = ScreenshotController();
   late Future<bool> _favorito;
   bool favorito = false;
 
@@ -45,166 +49,7 @@ class _PaginaDetalhesState extends State<PaginaDetalhes> {
             return Scrollbar(
               thumbVisibility: true,
               child: SingleChildScrollView(
-                child: Stack(
-                  children: [
-                    Container(
-                      alignment: Alignment.topCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: IntrinsicHeight(
-                          //usado para o container pegar a altura dos itens
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(10.0)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('MATRÍCULA: ',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold)),
-                                      Text('${widget.dados.matricula}'),
-                                      const SizedBox(height: 15),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('NOME: ',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold)),
-                                      Text(widget.dados.nome),
-                                      const SizedBox(height: 15),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('CARGO: ',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold)),
-                                      Text(widget.dados.cargo),
-                                      const SizedBox(height: 15),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('SIGLA: ',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold)),
-                                      Text(widget.dados.sigla),
-                                      const SizedBox(height: 15),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('SETOR LOTAÇÃO: ',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold)),
-                                      Text(widget.dados.setorLotacao),
-                                      const SizedBox(height: 15),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('INÍCIO DO PERÍODO: ',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold)),
-                                      Text(DateFormat('dd/MM/yyyy')
-                                          .format(widget.dados.inicioPeriodo)),
-                                      const SizedBox(height: 15),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('FIM DO PERÍODO: ',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold)),
-                                      Text(DateFormat('dd/MM/yyyy')
-                                          .format(widget.dados.fimPeriodo)),
-                                      const SizedBox(height: 15),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('QUANTIDADE DE DIAS: ',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold)),
-                                      Text('${widget.dados.qtdeDias}'),
-                                      const SizedBox(height: 15),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('VALOR DIÁRIAS: ',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold)),
-                                      Text('R\$ ${widget.dados.valorDiarias}'),
-                                      const SizedBox(height: 15),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('FINALIDADE (JUSTIFICATIVA): ',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold)),
-                                      Text(widget.dados.finalidade),
-                                      const SizedBox(height: 15),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('ROTEIRO: ',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold)),
-                                      Text(widget.dados.roteiro),
-                                      const SizedBox(height: 60),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                child: CardItens(dados: widget.dados)
               ),
             );
           }
@@ -215,6 +60,7 @@ class _PaginaDetalhesState extends State<PaginaDetalhes> {
         children: [
           FloatingActionButton(
             onPressed: () {
+              // Lógica para o botao de favoritos
               favorito ? removerDado() : inserirDado();
             },
             backgroundColor: Colors.grey,
@@ -226,8 +72,11 @@ class _PaginaDetalhesState extends State<PaginaDetalhes> {
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
-            onPressed: () {
+            onPressed: () async {
               // Lógica para o botao de share
+              final image = await screenshotController.captureFromWidget(CardItens(dados: widget.dados),
+              pixelRatio: 2);
+              Share.shareXFiles([XFile.fromData(image,mimeType: "jpg")]);
             },
             backgroundColor: Colors.grey,
             foregroundColor: Colors.white,
@@ -269,5 +118,147 @@ class _PaginaDetalhesState extends State<PaginaDetalhes> {
     );
     await dbFavoritos.close();
     return favoritos.isNotEmpty;
+  }
+}
+
+class CardItens extends StatelessWidget {
+  final Dados dados;
+  const CardItens({required this.dados, Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.topCenter,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: IntrinsicHeight(
+          //usado para o container pegar a altura dos itens
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(10.0)),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('MATRÍCULA: ',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
+                      Text('${dados.matricula}', style: const TextStyle(color: Colors.black)),
+                      const SizedBox(height: 15),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('NOME: ',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
+                      Text(dados.nome, style: const TextStyle(color: Colors.black)),
+                      const SizedBox(height: 15),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('CARGO: ',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
+                      Text(dados.cargo, style: const TextStyle(color: Colors.black)),
+                      const SizedBox(height: 15),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('SIGLA: ',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
+                      Text(dados.sigla, style: const TextStyle(color: Colors.black)),
+                      const SizedBox(height: 15),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('SETOR LOTAÇÃO: ',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
+                      Text(dados.setorLotacao, style: const TextStyle(color: Colors.black)),
+                      const SizedBox(height: 15),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('INÍCIO DO PERÍODO: ',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
+                      Text(DateFormat('dd/MM/yyyy')
+                          .format(dados.inicioPeriodo), style: const TextStyle(color: Colors.black)),
+                      const SizedBox(height: 15),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('FIM DO PERÍODO: ',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
+                      Text(DateFormat('dd/MM/yyyy')
+                          .format(dados.fimPeriodo), style: const TextStyle(color: Colors.black)),
+                      const SizedBox(height: 15),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('QUANTIDADE DE DIAS: ',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
+                      Text('${dados.qtdeDias}', style: const TextStyle(color: Colors.black)),
+                      const SizedBox(height: 15),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('VALOR DIÁRIAS: ',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
+                      Text('R\$ ${dados.valorDiarias}', style: const TextStyle(color: Colors.black)),
+                      const SizedBox(height: 15),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('FINALIDADE (JUSTIFICATIVA): ',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
+                      Text(dados.finalidade, style: const TextStyle(color: Colors.black)),
+                      const SizedBox(height: 15),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('ROTEIRO: ',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
+                      Text(dados.roteiro, style: const TextStyle(color: Colors.black)),
+                      const SizedBox(height: 60),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
