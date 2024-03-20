@@ -58,7 +58,7 @@ class DatabaseConnection {
 
     try {
       final results = await connection.query(
-          ' SELECT * FROM bd.diarias WHERE matricula = $matricula  ORDER BY $parametroOrdenacao $ordem');
+          ' SELECT * FROM bd.diarias WHERE CAST(matricula AS TEXT) LIKE \'$matricula%\'  ORDER BY $parametroOrdenacao $ordem');
       for (var row in results) {
         Dados dados = Dados(
           matricula: row[0] as int,
