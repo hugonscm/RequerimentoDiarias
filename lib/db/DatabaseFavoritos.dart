@@ -5,11 +5,12 @@ import '../model/Dados.dart';
 
 class DBFavoritos {
   DBFavoritos._();
+
   static final DBFavoritos instance = DBFavoritos._();
   static Database? _database;
 
   get database async {
-    if(_database != null) return _database;
+    if (_database != null) return _database;
     return await _initDatabase();
   }
 
@@ -38,7 +39,7 @@ class DBFavoritos {
     valor_diarias TEXT,
     finalidade TEXT,
     roteiro TEXT,
-	PRIMARY KEY (matricula, inicio_periodo, fim_periodo)
+	PRIMARY KEY (matricula, inicio_periodo, fim_periodo, valor_diarias, finalidade, roteiro)
 );
   ''';
 
@@ -51,11 +52,16 @@ class DBFavoritos {
     final db = await instance.database;
     return await db.delete(
       'funcionarios',
-      where: 'matricula = ? AND inicio_periodo = ? AND fim_periodo = ?',
+      where:
+          'matricula = ? AND inicio_periodo = ? AND fim_periodo = ? AND valor_diarias = ?'
+          'AND finalidade = ? AND roteiro = ?',
       whereArgs: [
         dado.matricula,
         dado.inicioPeriodo.toString(),
         dado.fimPeriodo.toString(),
+        dado.valorDiarias.toString(),
+        dado.finalidade.toString(),
+        dado.roteiro.toString(),
       ],
     );
   }
@@ -84,12 +90,24 @@ class DBFavoritos {
     required int matricula,
     required DateTime inicioPeriodo,
     required DateTime fimPeriodo,
+    required String valorDiarias,
+    required String finalidade,
+    required String roteiro,
   }) async {
     final Database db = await instance.database;
     return await db.query(
       'funcionarios',
-      where: 'matricula = ? AND inicio_periodo = ? AND fim_periodo = ?',
-      whereArgs: [matricula, inicioPeriodo.toString(), fimPeriodo.toString()],
+      where:
+          'matricula = ? AND inicio_periodo = ? AND fim_periodo = ?AND valor_diarias = ?'
+          'AND finalidade = ? AND roteiro = ?',
+      whereArgs: [
+        matricula,
+        inicioPeriodo.toString(),
+        fimPeriodo.toString(),
+        valorDiarias,
+        finalidade,
+        roteiro
+      ],
     );
   }
 
@@ -98,5 +116,3 @@ class DBFavoritos {
     db.close();
   }
 }
-
-

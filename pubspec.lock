@@ -41,6 +41,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.3"
+  card_tjsp:
+    dependency: "direct main"
+    description:
+      name: card_tjsp
+      sha256: "43dba6a62b5938ea60bb3e8dd7cde99a31505755719d3e9395e57913562320e5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   characters:
     dependency: transitive
     description:
@@ -747,5 +755,5 @@ packages:
     source: hosted
     version: "6.5.0"
 sdks:
-  dart: ">=3.2.0 <4.0.0"
+  dart: ">=3.2.1 <4.0.0"
   flutter: ">=3.16.0"

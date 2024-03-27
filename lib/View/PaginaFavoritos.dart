@@ -1,5 +1,5 @@
+import 'package:card_tjsp/card_tjsp.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../db/DatabaseFavoritos.dart';
 import '../model/Dados.dart';
@@ -58,10 +58,9 @@ class _DadosListViewState extends State<DadosListView> {
         itemBuilder: (context, index) {
           var dado = listaDeDados?[index];
           Color? backgroundColor =
-              index % 2 == 0 ? Colors.grey[300] : Colors.white;
+          index % 2 == 0 ? Colors.grey[300] : Colors.white;
 
           return Card(
-            color: backgroundColor,
             child: InkWell(
               //adicionar a animação de toque
               onTap: () {
@@ -71,56 +70,7 @@ class _DadosListViewState extends State<DadosListView> {
                       builder: (context) => PaginaDetalhes(dados: dado)),
                 ).then((value) => _getDados());
               },
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      dado!.nome,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const Text('MATRÍCULA: ',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold)),
-                        Text('${dado.matricula}')
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text('ROTEIRO: ',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold)),
-                        Text(dado.roteiro),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text('INÍCIO: ',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold)),
-                        Text(DateFormat('dd/MM/yyyy')
-                            .format(dado.inicioPeriodo)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text('FIM: ',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold)),
-                        Text(DateFormat('dd/MM/yyyy')
-                            .format(dado.fimPeriodo)),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              child: CardTjsp(dado!.nome, dado.cargo, dado.matricula.toString(), dado.roteiro, dado.qtdeDias.toString(), backgroundColor)
             ),
           );
         },

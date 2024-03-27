@@ -48,9 +48,8 @@ class _PaginaDetalhesState extends State<PaginaDetalhes> {
           } else {
             return Scrollbar(
               thumbVisibility: true,
-              child: SingleChildScrollView(
-                child: CardItens(dados: widget.dados)
-              ),
+              child:
+                  SingleChildScrollView(child: CardItens(dados: widget.dados)),
             );
           }
         },
@@ -74,9 +73,10 @@ class _PaginaDetalhesState extends State<PaginaDetalhes> {
           FloatingActionButton(
             onPressed: () async {
               // Lógica para o botao de share
-              final image = await screenshotController.captureFromWidget(CardItens(dados: widget.dados),
-              pixelRatio: 2);
-              Share.shareXFiles([XFile.fromData(image,mimeType: "jpg")]);
+              final image = await screenshotController.captureFromWidget(
+                  CardItens(dados: widget.dados),
+                  pixelRatio: 2);
+              Share.shareXFiles([XFile.fromData(image, mimeType: "jpg")]);
             },
             backgroundColor: Colors.grey,
             foregroundColor: Colors.white,
@@ -112,10 +112,12 @@ class _PaginaDetalhesState extends State<PaginaDetalhes> {
     final dbFavoritos = DBFavoritos.instance;
     final List<Map<String, dynamic>> favoritos =
         await dbFavoritos.verificarFavoritoExistente(
-      matricula: widget.dados.matricula,
-      inicioPeriodo: widget.dados.inicioPeriodo,
-      fimPeriodo: widget.dados.fimPeriodo,
-    );
+            matricula: widget.dados.matricula,
+            inicioPeriodo: widget.dados.inicioPeriodo,
+            fimPeriodo: widget.dados.fimPeriodo,
+            valorDiarias: widget.dados.valorDiarias,
+            finalidade: widget.dados.finalidade,
+            roteiro: widget.dados.roteiro);
     await dbFavoritos.close();
     return favoritos.isNotEmpty;
   }
@@ -123,7 +125,9 @@ class _PaginaDetalhesState extends State<PaginaDetalhes> {
 
 class CardItens extends StatelessWidget {
   final Dados dados;
+
   const CardItens({required this.dados, Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -146,8 +150,11 @@ class CardItens extends StatelessWidget {
                     children: [
                       const Text('MATRÍCULA: ',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
-                      Text('${dados.matricula}', style: const TextStyle(color: Colors.black)),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                      Text('${dados.matricula}',
+                          style: const TextStyle(color: Colors.black)),
                       const SizedBox(height: 15),
                     ],
                   ),
@@ -156,8 +163,11 @@ class CardItens extends StatelessWidget {
                     children: [
                       const Text('NOME: ',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
-                      Text(dados.nome, style: const TextStyle(color: Colors.black)),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                      Text(dados.nome,
+                          style: const TextStyle(color: Colors.black)),
                       const SizedBox(height: 15),
                     ],
                   ),
@@ -166,8 +176,11 @@ class CardItens extends StatelessWidget {
                     children: [
                       const Text('CARGO: ',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
-                      Text(dados.cargo, style: const TextStyle(color: Colors.black)),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                      Text(dados.cargo,
+                          style: const TextStyle(color: Colors.black)),
                       const SizedBox(height: 15),
                     ],
                   ),
@@ -176,8 +189,11 @@ class CardItens extends StatelessWidget {
                     children: [
                       const Text('SIGLA: ',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
-                      Text(dados.sigla, style: const TextStyle(color: Colors.black)),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                      Text(dados.sigla,
+                          style: const TextStyle(color: Colors.black)),
                       const SizedBox(height: 15),
                     ],
                   ),
@@ -186,8 +202,11 @@ class CardItens extends StatelessWidget {
                     children: [
                       const Text('SETOR LOTAÇÃO: ',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
-                      Text(dados.setorLotacao, style: const TextStyle(color: Colors.black)),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                      Text(dados.setorLotacao,
+                          style: const TextStyle(color: Colors.black)),
                       const SizedBox(height: 15),
                     ],
                   ),
@@ -196,9 +215,11 @@ class CardItens extends StatelessWidget {
                     children: [
                       const Text('INÍCIO DO PERÍODO: ',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
-                      Text(DateFormat('dd/MM/yyyy')
-                          .format(dados.inicioPeriodo), style: const TextStyle(color: Colors.black)),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                      Text(DateFormat('dd/MM/yyyy').format(dados.inicioPeriodo),
+                          style: const TextStyle(color: Colors.black)),
                       const SizedBox(height: 15),
                     ],
                   ),
@@ -207,9 +228,11 @@ class CardItens extends StatelessWidget {
                     children: [
                       const Text('FIM DO PERÍODO: ',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
-                      Text(DateFormat('dd/MM/yyyy')
-                          .format(dados.fimPeriodo), style: const TextStyle(color: Colors.black)),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                      Text(DateFormat('dd/MM/yyyy').format(dados.fimPeriodo),
+                          style: const TextStyle(color: Colors.black)),
                       const SizedBox(height: 15),
                     ],
                   ),
@@ -218,8 +241,11 @@ class CardItens extends StatelessWidget {
                     children: [
                       const Text('QUANTIDADE DE DIAS: ',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
-                      Text('${dados.qtdeDias}', style: const TextStyle(color: Colors.black)),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                      Text('${dados.qtdeDias}',
+                          style: const TextStyle(color: Colors.black)),
                       const SizedBox(height: 15),
                     ],
                   ),
@@ -228,8 +254,11 @@ class CardItens extends StatelessWidget {
                     children: [
                       const Text('VALOR DIÁRIAS: ',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
-                      Text('R\$ ${dados.valorDiarias}', style: const TextStyle(color: Colors.black)),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                      Text('R\$ ${dados.valorDiarias}',
+                          style: const TextStyle(color: Colors.black)),
                       const SizedBox(height: 15),
                     ],
                   ),
@@ -238,8 +267,11 @@ class CardItens extends StatelessWidget {
                     children: [
                       const Text('FINALIDADE (JUSTIFICATIVA): ',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
-                      Text(dados.finalidade, style: const TextStyle(color: Colors.black)),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                      Text(dados.finalidade,
+                          style: const TextStyle(color: Colors.black)),
                       const SizedBox(height: 15),
                     ],
                   ),
@@ -248,8 +280,11 @@ class CardItens extends StatelessWidget {
                     children: [
                       const Text('ROTEIRO: ',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black)),
-                      Text(dados.roteiro, style: const TextStyle(color: Colors.black)),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                      Text(dados.roteiro,
+                          style: const TextStyle(color: Colors.black)),
                       const SizedBox(height: 60),
                     ],
                   ),

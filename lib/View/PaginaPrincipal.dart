@@ -1,8 +1,11 @@
+import 'package:card_tjsp/card_tjsp.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../db/DatabaseConnection.dart';
+import '../login/authentication_screen.dart';
 import '../model/Dados.dart';
 import '../model/Filtro.dart';
 import 'PaginaDetalhes.dart';
@@ -340,13 +343,41 @@ class Header extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          alignment: Alignment.topLeft,
-          padding: const EdgeInsets.only(left: 15.0, top: 1.0),
-          child: const Text(
-            'Pesquise por Requerimentos de diárias de funcionário',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+         Row(
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 15.0, top: 1.0),
+              child: Text(
+                'Pesquise por Requerimentos\nde diárias de funcionário',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 1.0, right: 15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        await FirebaseAuth.instance.signOut();
+                        if(context.mounted){
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => const AuthenticationScreen()),
+                          );
+                        } else {
+                          print("Erro ao deslogar");
+                          return;
+                        }
+                      },
+                      child: const Icon(Icons.logout, color: Colors.black,),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -379,76 +410,21 @@ class DadosListView extends StatelessWidget {
           return Card(
             color: backgroundColor,
             child: InkWell(
-              //adicionar a animação de toque
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PaginaDetalhes(dados: dado),
-                  ),
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      dado!.nome,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PaginaDetalhes(dados: dado),
                     ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const Text('CARGO: ',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                        Expanded(
-                          child: Text(
-                            dado.cargo,
-                            //quebra de linha automática caso o texto seja muito grande
-                            softWrap: true,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text('MATRÍCULA: ',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                        Text('${dado.matricula}')
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text('ROTEIRO: ',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                        Expanded(
-                          child: Text(
-                            dado.roteiro,
-                            //quebra de linha automática caso o texto seja muito grande
-                            softWrap: true,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text('NÚMERO DE DIAS: ',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                        Text('${dado.qtdeDias}'),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
+                  );
+                },
+                child: CardTjsp(
+                    dado!.nome,
+                    dado.cargo,
+                    dado.matricula.toString(),
+                    dado.roteiro,
+                    dado.qtdeDias.toString(),
+                    backgroundColor)),
           );
         },
       ),
