@@ -10,5 +10,5 @@ Projeto para a disciplina de PROGRAMAÇÃO DE DISPOSITIVOS MÓVEIS.
 - Banco de dados local sqflite
 - Framework Flutter
 
-## Interface
+## Prévias
 <img src="https://raw.githubusercontent.com/hugonscm/RequerimentoDiarias/master/preview.PNG" alt="Prévia" min-width="600px" max-width="600px" width="600px" align="left">
